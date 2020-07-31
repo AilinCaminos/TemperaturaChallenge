@@ -2,6 +2,8 @@ package ar.com.ada.api.nasa.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,7 +13,8 @@ import javax.persistence.Table;
 @Table(name = "temperatura")
 public class Temperatura {
 @Id
-@Column(name = "temperatura_id")
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "id_temperatura")
 private Integer id;
 @ManyToOne
 @JoinColumn(name = "codigo_pais", referencedColumnName = "codigo_pais")

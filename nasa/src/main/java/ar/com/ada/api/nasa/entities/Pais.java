@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -20,7 +22,7 @@ public class Pais {
     private Integer codigoPais;
     private String nombre;
     @OneToMany(mappedBy = "pais", cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
     private List<Temperatura> temperaturas = new ArrayList<>();
 
     public Integer getCodigoPais() {
