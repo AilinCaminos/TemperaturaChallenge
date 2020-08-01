@@ -7,6 +7,6 @@ import ar.com.ada.api.nasa.entities.Temperatura;
 
 @Repository
 public interface TemperaturaRepository extends JpaRepository<Temperatura, Integer> {
-    
-    
+
+    public Temperatura findById(int id);
 }

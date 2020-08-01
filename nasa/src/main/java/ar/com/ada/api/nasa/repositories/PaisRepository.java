@@ -7,7 +7,7 @@ import ar.com.ada.api.nasa.entities.Pais;
 
 @Repository
 public interface PaisRepository extends JpaRepository<Pais, Integer> {
-    
+
     public Pais findByCodigoPais(int codigoPais);
 
 }

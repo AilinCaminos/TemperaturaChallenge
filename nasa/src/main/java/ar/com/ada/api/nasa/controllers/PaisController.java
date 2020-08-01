@@ -40,6 +40,7 @@ public class PaisController {
       GenericResponse resp = new GenericResponse();
       resp.isOk = true;
       resp.message = "Se agrego el pais " + pais.nombre + " con exito";
+      resp.id = pais.codigoPais;
 
       return ResponseEntity.ok(resp);
 
@@ -74,7 +75,8 @@ public class PaisController {
     */
 
    @PutMapping("/paises/{codigoPais}")
-   public ResponseEntity<GenericResponse> actualizarNombrePais(@PathVariable int codigoPais,@RequestBody String nombre) {
+   public ResponseEntity<GenericResponse> actualizarNombrePais(@PathVariable int codigoPais,
+         @RequestBody String nombre) {
 
       Pais paisOriginal = paisService.buscarPorCodigoPais(codigoPais);
 

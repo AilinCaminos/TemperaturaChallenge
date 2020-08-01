@@ -4,5 +4,5 @@ public class CreacionPaisRequest {
 
     public Integer codigoPais;
     public String nombre;
-    
+
 }
