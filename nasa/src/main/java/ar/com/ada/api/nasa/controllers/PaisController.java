@@ -16,6 +16,7 @@ import org.springframework.web.servlet.function.EntityResponse;
 
 import ar.com.ada.api.nasa.entities.Pais;
 import ar.com.ada.api.nasa.models.request.CreacionPaisRequest;
+import ar.com.ada.api.nasa.models.request.NombrePaisRequest;
 import ar.com.ada.api.nasa.models.response.GenericResponse;
 import ar.com.ada.api.nasa.services.PaisService;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,18 +77,19 @@ public class PaisController {
 
    @PutMapping("/paises/{codigoPais}")
    public ResponseEntity<GenericResponse> actualizarNombrePais(@PathVariable int codigoPais,
-         @RequestBody String nombre) {
+         @RequestBody NombrePaisRequest nombreNuevo) {
 
       Pais paisOriginal = paisService.buscarPorCodigoPais(codigoPais);
 
       if (paisOriginal != null) {
 
-         paisService.actualizarNombrePais(paisOriginal, nombre);
+         paisService.actualizarNombrePais(paisOriginal, nombreNuevo.nombre);
 
          GenericResponse resp = new GenericResponse();
 
          resp.isOk = true;
          resp.message = "Se actualizo con exito el nombre";
+         resp.id = paisOriginal.getCodigoPais();
 
          return ResponseEntity.ok(resp);
 

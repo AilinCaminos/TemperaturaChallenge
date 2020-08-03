@@ -1,5 +1,6 @@
 package ar.com.ada.api.nasa.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.com.ada.api.nasa.entities.Temperatura;
 import ar.com.ada.api.nasa.models.request.TemperaturaRequest;
 import ar.com.ada.api.nasa.models.response.GenericResponse;
+import ar.com.ada.api.nasa.models.response.*;
 import ar.com.ada.api.nasa.services.TemperaturaService;
 
 @RestController
@@ -24,20 +26,12 @@ public class TemperaturaController {
   TemperaturaService temperaturaService;
 
   /*
-  POST /temperaturas : 
-  que registre una temperatura de un país en un año específico 
-  RequestBody 
-  { 
-    “codigoPais”: 32,
-    “anio”: 2010,
-    “grados”: 38.6 
-  }
-
-  Respuesta Esperada(JSON):
-
-  { 
-    “id”: 25 //O cualquier número de temperatura que devuelva. 
-  }
+   * POST /temperaturas : que registre una temperatura de un país en un año
+   * específico RequestBody { “codigoPais”: 32, “anio”: 2010, “grados”: 38.6 }
+   * 
+   * Respuesta Esperada(JSON):
+   * 
+   * { “id”: 25 //O cualquier número de temperatura que devuelva. }
    */
 
   @PostMapping("/temperaturas")
@@ -56,9 +50,8 @@ public class TemperaturaController {
   }
 
   /*
-  GET /temperaturas/paises/{codigoPais} : 
-  que devuelva la lista de temperaturas con sus años de un país especifico, 
-  indicado por “codigoPais”.
+   * GET /temperaturas/paises/{codigoPais} : que devuelva la lista de temperaturas
+   * con sus años de un país especifico, indicado por “codigoPais”.
    */
 
   @GetMapping("temperaturas/paises/{codigoPais}")
@@ -69,16 +62,16 @@ public class TemperaturaController {
   }
 
   /*
-  DELETE /temperaturas/{id}: 
-  no se borrará la temperatura id, deberá cambiar el año a 0.
-  */
+   * DELETE /temperaturas/{id}: no se borrará la temperatura id, deberá cambiar el
+   * año a 0.
+   */
 
   @DeleteMapping("/temperaturas/{id}")
-  public ResponseEntity<?> borrarTemperatura(@PathVariable int id){
+  public ResponseEntity<?> borrarTemperatura(@PathVariable int id) {
 
     Temperatura temperatura = temperaturaService.buscarPorTemperaturaId(id);
 
-    if(temperatura != null){
+    if (temperatura != null) {
 
       temperaturaService.borrarTemperatura(temperatura);
 
@@ -90,10 +83,56 @@ public class TemperaturaController {
 
       return ResponseEntity.ok(resp);
 
-    } 
+    }
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
   }
 
+  /*
+   * GET /temperaturas/anios/{anio} : que devuelva la lista de temperaturas de un
+   * año en particular en el siguiente formato JSON Array: [{ “nombrePais”:
+   * “Argentina”, “grados”: 29 }, { “nombrePais”: “Venezuela”, “grados”: 45 }]
+   */
+  @GetMapping("/temperaturas/anios/{anio}")
+  public ResponseEntity<List<TemperaturaAnioResponse>> listarTemperaturasPorAnio(@PathVariable Integer anio) {
 
+    List<TemperaturaAnioResponse> resultado = new ArrayList<>();
+
+    // Obtengo la lista de temperaturas anuales.
+    List<Temperatura> tempsPorAnio = temperaturaService.buscarPorAnio(anio);
+
+    // Recorres y agregas temperatura de un formato, a otro formato, o sea, la
+    // "mapeas"
+    for (Temperatura t : tempsPorAnio) {
+      TemperaturaAnioResponse t2 = new TemperaturaAnioResponse();
+      t2.nombrePais = t.getPais().getNombre();
+      t2.grados = t.getTemperatura();
+      resultado.add(t2);
+    }
+
+    return ResponseEntity.ok(resultado);
+
+  }
+
+  /*
+   * GET /temperaturas/maximas/{codigoPais} : que devuelva la temperatura máxima
+   * para un país en particular en este formato JSON(informar el año en que
+   * ocurrió) { “nombrePais”: “Venezuela”, “temperaturaMaxima”: 45, “anio”: 2011 }
+   */
+
+  @GetMapping("/temperaturas/maximas/{codigoPais}")
+  public ResponseEntity<TemperaturaMaxResponse> buscarTempMax(@PathVariable Integer codigoPais) {
+
+    TemperaturaMaxResponse tempMaxResponse = new TemperaturaMaxResponse();
+
+    Temperatura tempMax = temperaturaService.buscarTempMax(codigoPais);
+
+    tempMaxResponse.nombrePais = tempMax.getPais().getNombre();
+    tempMaxResponse.temperaturaMaxima = tempMax.getTemperatura();
+    tempMaxResponse.anio = tempMax.getAnio();
+
+    return ResponseEntity.ok(tempMaxResponse);
+
+  }
+  
 }
