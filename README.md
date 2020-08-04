@@ -1,6 +1,6 @@
 # NASA Climate Change
 
-_Proyecto WEB API para registrar los datos de temperaturas de diferentes países solo a nivel año._
+_Proyecto WEB API para registrar los datos de temperaturas de diferentes países solo por año._
 
 ## Detalle del Proyecto
 
